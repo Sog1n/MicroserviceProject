@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -117,8 +118,8 @@ public class ProductService {
     }
 
     @org.springframework.transaction.annotation.Transactional
-    public void reduceStock(java.util.List<java.util.Map<String, Object>> items) {
-        for(java.util.Map<String, Object> item : items)
+    public void reduceStock(List<Map<String, Object>> items) {
+        for(Map<String, Object> item : items)
         {
             Long productId = Long.valueOf(item.get("productId").toString());
             Integer quantity = Integer.valueOf(item.get("quantity").toString());
