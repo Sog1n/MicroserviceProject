@@ -1,15 +1,19 @@
 package com.electronic.productservice.service;
 
 import com.electronic.productservice.repository.ProductRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
-public class KafkaConsumrService {
+public class KafkaConsumeService {
     private final ObjectMapper objectMapper;
     private final ProductRepository productRepository;
 
@@ -23,6 +27,12 @@ public class KafkaConsumrService {
             System.out.println("Processing order event: " + message);
             JsonNode root = objectMapper.readTree(message);
             JsonNode items = root.get("items");
+
+            if(items != null && items.isArray())
+            {
+                List<Map<String, Object>> itemList = objectMapper.convertValue(items, new TypeReference<List<Map<String, Object>>>(){});
+            }
+
             if(items != null && items.isArray())
             {
                 for(JsonNode item : items)
