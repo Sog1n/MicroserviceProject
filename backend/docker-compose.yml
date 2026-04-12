@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   mysql:
     image: mysql:8.0
@@ -8,34 +7,191 @@ services:
       MYSQL_DATABASE: electronic_db
     ports:
       - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p1234567890"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - electronic-network
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.3
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: electronic-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "22181:2181"
+      - "2181:2181"
+    healthcheck:
+      test: ["CMD-SHELL", "cub zk-ready zookeeper:2181 30"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     networks:
       - electronic-network
 
   kafka:
-    image: confluentinc/cp-kafka:7.5.3
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: electronic-kafka
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD-SHELL", "cub kafka-ready -b localhost:9092 1 30"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     networks:
       - electronic-network
+
+  discovery-service:
+    build:
+      context: ./discovery-service
+    container_name: discovery-service
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8761/api/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+    networks:
+      - electronic-network
+
+  product-service:
+    build:
+      context: ./product-service
+    container_name: product-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/electronic_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567890
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8081/api/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+    networks:
+      - electronic-network
+
+  user-service:
+    build:
+      context: ./user-service
+    container_name: user-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/electronic_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567890
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      GOOGLE_CLIENT_ID: 961576948761-ugvfne50v8rp1r8a9kb2pe36mmel0v6v.apps.googleusercontent.com
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: your-email@gmail.com
+      SPRING_MAIL_PASSWORD: your-email-password
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8082/api/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+    networks:
+      - electronic-network
+
+  order-service:
+    build:
+      context: ./order-service
+    container_name: order-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/electronic_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567890
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8083/api/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+    networks:
+      - electronic-network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      ALLWED_ORIGINS: http://localhost:5173
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/api/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+    networks:
+      - electronic-network
+
+volumes:
+  mysql-data:
 
 networks:
   electronic-network:
