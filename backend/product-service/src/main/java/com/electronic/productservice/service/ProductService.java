@@ -81,7 +81,8 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findByStatus("APPROVED");
+
+        return productRepository.findAll();
     }
 
     public List<Product> getProductsByStatus(String status){

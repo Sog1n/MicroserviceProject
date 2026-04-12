@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="/CustomUserDetailsService (snapshot).java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="/CustomUserDetailsService (snapshot).java" />
+              <option name="updatedContent" value="package com.electronic.userservice.service;&#10;&#10;import com.electronic.userservice.model.User;&#10;import com.electronic.userservice.repository.UserRepository;&#10;import lombok.RequiredArgsConstructor;&#10;import org.springframework.security.core.authority.SimpleGrantedAuthority;&#10;import org.springframework.security.core.userdetails.UserDetails;&#10;import org.springframework.security.core.userdetails.UserDetailsService;&#10;import org.springframework.security.core.userdetails.UsernameNotFoundException;&#10;import org.springframework.stereotype.Service;&#10;&#10;import java.util.List;&#10;&#10;@Service&#10;@RequiredArgsConstructor&#10;public class CustomUserDetailsService implements UserDetailsService {&#10;&#10;    private final UserRepository userRepository;&#10;&#10;    @Override&#10;    public UserDetails loadUserByUsername(String loginKey) throws UsernameNotFoundException {&#10;        User user = userRepository.findByUsername(loginKey)&#10;                .or(() -&gt; userRepository.findByEmail(loginKey))&#10;                .or(() -&gt; userRepository.findByPhone(loginKey))&#10;                .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User not found&quot;));&#10;&#10;        String role = user.getRole() == null ? &quot;USER&quot; : user.getRole().trim();&#10;        String authority = role.startsWith(&quot;ROLE_&quot;) ? role : &quot;ROLE_&quot; + role;&#10;&#10;        return org.springframework.security.core.userdetails.User&#10;                .withUsername(user.getUsername())&#10;                .password(user.getPassword())&#10;                .authorities(List.of(new SimpleGrantedAuthority(authority)))&#10;                .build();&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
