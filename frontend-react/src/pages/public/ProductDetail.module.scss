@@ -1,0 +1,121 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page { padding-bottom: $space-10; }
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  color: $text-secondary;
+  margin-bottom: $space-6;
+  font-weight: $fw-medium;
+  &:hover { color: $color-primary; }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-10;
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gallery { display: flex; flex-direction: column; gap: $space-4; }
+
+.mainImage {
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $color-gray-50;
+  @include flex-center;
+  aspect-ratio: 1;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.noImage { font-size: 5rem; opacity: 0.2; }
+
+.thumbnails {
+  display: flex;
+  gap: $space-2;
+}
+
+.thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  border: 2px solid $color-gray-200;
+  cursor: pointer;
+  transition: border-color $transition-fast;
+
+  &:hover { border-color: $color-primary; }
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.info { display: flex; flex-direction: column; gap: $space-4; }
+
+.category {
+  display: inline-block;
+  padding: $space-1 $space-3;
+  background: rgba($color-primary, 0.08);
+  color: $color-primary;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $fw-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.name {
+  font-size: $font-size-3xl;
+  line-height: 1.2;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-md;
+}
+
+.starIcon { color: #f9ca24; fill: #f9ca24; }
+.ratingValue { font-weight: $fw-semibold; }
+.reviewCount { color: $text-muted; }
+
+.price {
+  font-size: $font-size-4xl;
+  font-weight: $fw-extrabold;
+  color: $color-primary-dark;
+}
+
+.stockBadge {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  color: $color-success;
+  font-weight: $fw-medium;
+}
+
+.oos { color: $color-danger; }
+
+.actions { margin-top: $space-4; }
+
+.descriptionSection {
+  margin-top: $space-6;
+  padding-top: $space-6;
+  border-top: 1px solid $color-gray-200;
+
+  h3 {
+    margin-bottom: $space-3;
+    font-size: $font-size-lg;
+  }
+
+  p {
+    color: $text-secondary;
+    line-height: 1.8;
+  }
+}

@@ -1,0 +1,49 @@
+@use '../../../styles/variables' as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $fw-medium;
+  color: $text-primary;
+}
+
+.input {
+  padding: $space-3 $space-4;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $text-primary;
+  background: $color-white;
+  transition: all $transition-fast;
+  outline: none;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
+  }
+}
+
+.errorInput {
+  border-color: $color-danger;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color-danger, 0.12);
+  }
+}
+
+.error {
+  font-size: $font-size-xs;
+  color: $color-danger;
+}

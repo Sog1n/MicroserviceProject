@@ -1,0 +1,101 @@
+// ── SCSS Design Tokens ──────────────────────────────────────────────
+// Colors
+$color-primary: #6C5CE7;
+$color-primary-light: #a29bfe;
+$color-primary-dark: #4834d4;
+$color-secondary: #00cec9;
+$color-accent: #fd79a8;
+$color-success: #00b894;
+$color-warning: #fdcb6e;
+$color-danger: #d63031;
+$color-info: #0984e3;
+
+// Neutrals
+$color-white: #ffffff;
+$color-gray-50: #f8f9fc;
+$color-gray-100: #f1f2f6;
+$color-gray-200: #dfe6e9;
+$color-gray-300: #b2bec3;
+$color-gray-400: #7f8c8d;
+$color-gray-500: #636e72;
+$color-gray-600: #2d3436;
+$color-gray-700: #1e272e;
+$color-gray-800: #141a1f;
+$color-gray-900: #0a0e12;
+
+// Backgrounds
+$bg-body: $color-gray-50;
+$bg-card: $color-white;
+$bg-sidebar: $color-gray-800;
+$bg-dark: $color-gray-900;
+
+// Text
+$text-primary: $color-gray-700;
+$text-secondary: $color-gray-500;
+$text-muted: $color-gray-400;
+$text-on-dark: $color-gray-100;
+
+// Typography
+$font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 2rem;
+$font-size-4xl: 2.5rem;
+
+// Font weights
+$fw-light: 300;
+$fw-regular: 400;
+$fw-medium: 500;
+$fw-semibold: 600;
+$fw-bold: 700;
+$fw-extrabold: 800;
+
+// Spacing scale
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.25rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+$space-16: 4rem;
+$space-20: 5rem;
+
+// Border radius
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.10);
+$shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.14);
+
+// Transitions
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 400ms ease;
+
+// Breakpoints
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;
+$bp-xxl: 1440px;
+
+// Z-index layers
+$z-dropdown: 100;
+$z-sticky: 200;
+$z-fixed: 300;
+$z-modal-backdrop: 400;
+$z-modal: 500;
+$z-toast: 600;

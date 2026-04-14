@@ -1,0 +1,95 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page { padding-bottom: $space-10; h1 { margin-bottom: $space-8; } }
+.backLink { display: inline-flex; align-items: center; gap: $space-2; color: $text-secondary; margin-bottom: $space-4; &:hover { color: $color-primary; } }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: $space-6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-6;
+  color: $color-primary;
+  h3 { color: $text-primary; }
+}
+
+// Table styles
+.table { margin-top: $space-4; }
+
+.tableHeader, .tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3 $space-4;
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; gap: $space-2; }
+}
+
+.tableHeader {
+  font-weight: $fw-semibold;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  border-bottom: 2px solid $color-gray-200;
+  @media (max-width: $bp-md) { display: none; }
+}
+
+.tableRow {
+  border-bottom: 1px solid $color-gray-100;
+  transition: background $transition-fast;
+  &:hover { background: $color-gray-50; }
+}
+
+.orderId { font-weight: $fw-semibold; color: $color-primary; }
+.bold { font-weight: $fw-bold; }
+.muted { color: $text-secondary; font-size: $font-size-sm; margin-top: $space-2; }
+
+.statusBadge {
+  display: inline-block;
+  padding: $space-1 $space-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $fw-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.statusLarge {
+  font-size: $font-size-2xl;
+  font-weight: $fw-bold;
+  color: $color-primary;
+  margin-bottom: $space-4;
+}
+
+.orderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-3 0;
+  border-bottom: 1px solid $color-gray-100;
+  &:last-of-type { border-bottom: none; }
+}
+
+.orderTotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: $fw-bold;
+  font-size: $font-size-lg;
+  border-top: 2px solid $color-gray-200;
+  margin-top: $space-4;
+  padding-top: $space-4;
+}
+
+.cancelBtn { margin-top: $space-6; }

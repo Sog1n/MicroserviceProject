@@ -1,0 +1,242 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: $bg-body;
+}
+
+// ── Sidebar ────────────────────────────────────────────────────────
+.sidebar {
+  width: 260px;
+  background: $color-gray-900;
+  color: $color-white;
+  display: flex;
+  flex-direction: column;
+  transition: width $transition-base;
+  z-index: $z-fixed;
+  
+  &.collapsed {
+    width: 80px;
+
+    .logo {
+      font-size: $font-size-xl;
+    }
+  }
+
+  @media (max-width: $bp-lg) {
+    display: none; // hide on mobile natively
+
+    &.mobileOpen {
+      display: flex;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 260px;
+      z-index: $z-modal;
+      box-shadow: $shadow-xl;
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: $z-modal-backdrop;
+  
+  @include lg {
+    display: none;
+  }
+}
+
+.sidebarHeader {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $space-4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  font-size: $font-size-2xl;
+  font-weight: $fw-extrabold;
+  color: $color-white;
+  letter-spacing: -1px;
+}
+
+.closeMobile {
+  display: none;
+  background: transparent;
+  color: $color-white;
+  font-size: $font-size-xl;
+  
+  @media (max-width: $bp-lg) {
+    display: block;
+  }
+}
+
+.nav {
+  flex: 1;
+  padding: $space-4 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  overflow-y: auto;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: $space-3 $space-4;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all $transition-fast;
+  border-left: 3px solid transparent;
+
+  &:hover, &.active {
+    color: $color-white;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.active {
+    border-left-color: $color-primary-light;
+  }
+}
+
+.icon {
+  font-size: 1.25rem;
+  min-width: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.label {
+  margin-left: $space-3;
+  font-weight: $fw-medium;
+  white-space: nowrap;
+}
+
+// ── Main Content Area ──────────────────────────────────────────────
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  height: 70px;
+  background: $color-white;
+  border-bottom: 1px solid $color-gray-200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $space-6;
+  z-index: $z-sticky;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+}
+
+.menuToggle {
+  background: transparent;
+  color: $text-primary;
+  font-size: $font-size-xl;
+  display: flex;
+
+  @media (max-width: $bp-lg) {
+    display: none;
+  }
+}
+
+.mobileMenuToggle {
+  background: transparent;
+  color: $text-primary;
+  font-size: $font-size-xl;
+  display: none;
+
+  @media (max-width: $bp-lg) {
+    display: flex;
+  }
+}
+
+.pageTitle {
+  font-size: $font-size-lg;
+  font-weight: $fw-bold;
+  color: $text-primary;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary-light, $color-primary);
+  color: $color-white;
+  font-weight: $fw-bold;
+  @include flex-center;
+  font-size: $font-size-lg;
+}
+
+.nameRole {
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: $bp-sm) {
+    display: none;
+  }
+}
+
+.name {
+  font-size: $font-size-sm;
+  font-weight: $fw-bold;
+  color: $text-primary;
+  line-height: 1.2;
+}
+
+.role {
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  font-weight: $fw-medium;
+}
+
+.logoutBtn {
+  background: transparent;
+  color: $text-secondary;
+  font-size: $font-size-lg;
+  @include flex-center;
+  
+  &:hover {
+    color: $color-danger;
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $space-6;
+  background: $bg-body;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}

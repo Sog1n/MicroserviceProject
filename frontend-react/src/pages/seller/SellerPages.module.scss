@@ -1,0 +1,207 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.pageTitle { margin-bottom: $space-6; }
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-6;
+  flex-wrap: wrap;
+  gap: $space-4;
+}
+
+// KPIs (reuse same pattern as admin)
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $space-4;
+  margin-bottom: $space-8;
+}
+
+.kpiCard {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-5;
+}
+
+.kpiIcon {
+  width: 52px; height: 52px;
+  border-radius: $radius-md;
+  @include flex-center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.kpiValue {
+  font-size: $font-size-2xl;
+  font-weight: $fw-bold;
+  color: $text-primary;
+  line-height: 1.1;
+}
+
+.kpiLabel {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin-top: $space-1;
+}
+
+.dashGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: $space-6;
+}
+
+// Table
+.tableCard { h3 { margin-bottom: $space-4; } }
+.table { overflow-x: auto; }
+
+.tableHeader, .tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+}
+
+.tableHeader {
+  font-weight: $fw-semibold;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  border-bottom: 2px solid $color-gray-200;
+}
+
+.tableRow {
+  border-bottom: 1px solid $color-gray-100;
+  font-size: $font-size-sm;
+  &:hover { background: $color-gray-50; }
+}
+
+.orderId { font-weight: $fw-semibold; color: $color-primary; }
+.bold { font-weight: $fw-bold; }
+.muted { color: $text-secondary; font-size: $font-size-sm; }
+
+.statusBadge {
+  display: inline-block;
+  padding: $space-1 $space-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $fw-bold;
+  text-transform: uppercase;
+  width: fit-content;
+  background: rgba($color-info, 0.12);
+  color: $color-info;
+  &.active { background: rgba($color-success, 0.12); color: $color-success; }
+}
+
+.statusSelect {
+  padding: $space-2 $space-3;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  outline: none;
+  cursor: pointer;
+  &:focus { border-color: $color-primary; }
+}
+
+// Low stock
+.lowStockList { display: flex; flex-direction: column; }
+
+.lowStockItem {
+  display: flex;
+  justify-content: space-between;
+  padding: $space-3 0;
+  border-bottom: 1px solid $color-gray-100;
+  &:last-child { border-bottom: none; }
+}
+
+.stockWarning {
+  color: $color-danger;
+  font-weight: $fw-bold;
+  font-size: $font-size-sm;
+}
+
+// Product Grid
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $space-4;
+}
+
+.productCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.productImage {
+  height: 160px;
+  background: $color-gray-50;
+  @include flex-center;
+  overflow: hidden;
+  img { width: 100%; height: 100%; object-fit: cover; }
+  span { font-size: 3rem; opacity: 0.2; }
+}
+
+.productInfo {
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  h4 { font-size: $font-size-md; }
+}
+
+.productActions {
+  display: flex;
+  gap: $space-2;
+  padding: 0 $space-4 $space-4;
+}
+
+// Modal
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: $z-modal-backdrop;
+  @include flex-center;
+}
+
+.modal {
+  background: $color-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xl;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: $z-modal;
+}
+
+.modalHeader {
+  @include flex-between;
+  padding: $space-5 $space-6;
+  border-bottom: 1px solid $color-gray-100;
+  h3 { font-size: $font-size-lg; }
+}
+
+.closeBtn {
+  background: transparent;
+  color: $text-secondary;
+  font-size: $font-size-xl;
+  @include flex-center;
+  &:hover { color: $text-primary; }
+}
+
+.modalForm {
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+}

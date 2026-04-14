@@ -1,0 +1,35 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.container {
+  @include flex-center;
+  flex-direction: column;
+  min-height: 60vh;
+  text-align: center;
+  gap: $space-4;
+}
+
+.icon {
+  font-size: 4rem;
+  color: $color-danger;
+  opacity: 0.5;
+}
+
+.title {
+  font-size: 5rem;
+  font-weight: $fw-extrabold;
+  color: $color-gray-800;
+  line-height: 1;
+}
+
+.message {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  max-width: 400px;
+}
+
+.actions {
+  display: flex;
+  gap: $space-4;
+  margin-top: $space-4;
+}

@@ -1,0 +1,170 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.pageTitle { margin-bottom: $space-6; }
+
+// KPIs
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $space-4;
+  margin-bottom: $space-8;
+}
+
+.kpiCard {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-5;
+}
+
+.kpiIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-md;
+  @include flex-center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.kpiValue {
+  font-size: $font-size-2xl;
+  font-weight: $fw-bold;
+  color: $text-primary;
+  line-height: 1.1;
+}
+
+.kpiLabel {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin-top: $space-1;
+}
+
+// Table
+.tableCard {
+  h3 { margin-bottom: $space-4; }
+}
+
+.table { overflow-x: auto; }
+
+.tableHeader, .tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+}
+
+// 6-col for user management
+.tableHeader:has(+ .tableRow span:nth-child(6)),
+.tableRow:has(span:nth-child(6)) {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.tableHeader {
+  font-weight: $fw-semibold;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  border-bottom: 2px solid $color-gray-200;
+}
+
+.tableRow {
+  border-bottom: 1px solid $color-gray-100;
+  font-size: $font-size-sm;
+  transition: background $transition-fast;
+  &:hover { background: $color-gray-50; }
+}
+
+.orderId { font-weight: $fw-semibold; color: $color-primary; }
+.bold { font-weight: $fw-bold; }
+.muted { color: $text-secondary; font-size: $font-size-sm; }
+
+.statusBadge {
+  display: inline-block;
+  padding: $space-1 $space-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $fw-bold;
+  text-transform: uppercase;
+  width: fit-content;
+  background: rgba($color-info, 0.12);
+  color: $color-info;
+
+  &.active { background: rgba($color-success, 0.12); color: $color-success; }
+  &.suspended { background: rgba($color-danger, 0.12); color: $color-danger; }
+}
+
+.roleBadge {
+  display: inline-block;
+  padding: $space-1 $space-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $fw-bold;
+  background: rgba($color-primary, 0.12);
+  color: $color-primary;
+  width: fit-content;
+}
+
+// Toolbar
+.toolbar {
+  margin-bottom: $space-6;
+  display: flex;
+  gap: $space-4;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: $space-4;
+  transform: translateY(-50%);
+  color: $text-muted;
+}
+
+.searchInput {
+  width: 100%;
+  padding: $space-3 $space-4 $space-3 $space-10;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  outline: none;
+  &:focus { border-color: $color-primary; }
+}
+
+// Moderation
+.moderationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $space-4;
+}
+
+.modCard {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  padding: $space-4;
+}
+
+.modImage {
+  height: 180px;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  background: $color-gray-50;
+  @include flex-center;
+  img { width: 100%; height: 100%; object-fit: cover; }
+  span { font-size: 3rem; opacity: 0.2; }
+}
+
+.modInfo {
+  h4 { margin-bottom: $space-1; }
+}
+
+.modActions {
+  display: flex;
+  gap: $space-2;
+}

@@ -1,0 +1,74 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  padding-bottom: $space-10;
+  h1 { margin-bottom: $space-8; }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: $space-8;
+  align-items: start;
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.section {
+  h3 { margin-bottom: $space-4; font-size: $font-size-lg; }
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+  font-weight: $fw-medium;
+
+  &.selected {
+    border-color: $color-primary;
+    background: rgba($color-primary, 0.04);
+  }
+
+  input { accent-color: $color-primary; }
+}
+
+.summary {
+  position: sticky;
+  top: 100px;
+  h3 { margin-bottom: $space-4; font-size: $font-size-lg; }
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  padding: $space-2 0;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: $fw-bold;
+  font-size: $font-size-lg;
+  border-top: 2px solid $color-gray-200;
+  margin: $space-4 0 $space-6;
+  padding-top: $space-4;
+}

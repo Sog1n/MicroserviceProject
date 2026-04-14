@@ -1,0 +1,93 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: $space-16;
+  padding-bottom: $space-16;
+}
+
+.hero {
+  border-radius: $radius-xl;
+  background: linear-gradient(135deg, $color-gray-900, $color-primary-dark);
+  color: $color-white;
+  padding: $space-20 $space-8;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: $shadow-xl;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-size: $font-size-4xl;
+  font-weight: $fw-extrabold;
+  color: $color-white;
+  margin-bottom: $space-4;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.heroSubtitle {
+  font-size: $font-size-xl;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: $space-8;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+.ctaBtn {
+  font-size: $font-size-lg;
+  padding: $space-4 $space-10;
+  border-radius: $radius-full;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $space-8;
+}
+
+.featureItem {
+  @include card;
+  text-align: center;
+  padding: $space-8;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h3 {
+    margin-bottom: $space-2;
+    font-size: $font-size-lg;
+  }
+
+  p {
+    color: $text-secondary;
+  }
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  color: $color-primary;
+  margin-bottom: $space-4;
+}
