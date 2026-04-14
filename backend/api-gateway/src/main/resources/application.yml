@@ -6,22 +6,23 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      mvc:
-        routes:
-          - id: product-service
-            uri: lb://PRODUCT-SERVICE
-            predicates:
-              - Path=/api/products,/api/products/**
+      server:
+        webmvc:
+          routes:
+            - id: product-service
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/api/products,/api/products/**
 
-          - id: user-service
-            uri: lb://USER-SERVICE
-            predicates:
-              - Path=/api/users,/api/users/**,/api/auth,/api/auth/**
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/users,/api/users/**,/api/auth,/api/auth/**,/api/admin,/api/admin/**
 
-          - id: order-service
-            uri: lb://ORDER-SERVICE
-            predicates:
-              - Path=/api/orders,/api/orders/**
+            - id: order-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/api/orders,/api/orders/**
 
 eureka:
   client:
@@ -30,5 +31,5 @@ eureka:
 
 logging:
   level:
-    org.springframework.cloud.gateway.mvc: TRACE
+    org.springframework.cloud.gateway.server.webmvc: TRACE
     org.springframework.web.servlet: DEBUG

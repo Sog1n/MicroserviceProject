@@ -19,6 +19,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
+    private Long sellerId;
     private Double totalAmount;
     private String status; // PENDING, APPROVED, REJECTED
     private LocalDateTime orderDate;

@@ -52,6 +52,10 @@ public class OrderService {
         return orderRepository.findByUserId(userId);
     }
 
+    public List<Order> getOrdersBySellerId(Long sellerId) {
+        return orderRepository.findBySellerId(sellerId);
+    }
+
     /** Admin: fetch all orders in the system. */
     public List<Order> getAllOrders() {
         return orderRepository.findAll();

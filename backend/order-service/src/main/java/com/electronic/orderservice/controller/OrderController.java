@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
@@ -24,6 +24,12 @@ public class OrderController {
     public List<Order> getOrdersByUser(@PathVariable Long userId)
     {
         return orderService.getOrdersByUserId(userId);
+    }
+
+    @GetMapping("/seller/{sellerId}")
+    public List<Order> getOrdersBySeller(@PathVariable Long sellerId)
+    {
+        return orderService.getOrdersBySellerId(sellerId);
     }
 
     /** Admin: list all orders. */
