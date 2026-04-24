@@ -24,13 +24,14 @@ public class KafkaConsumeService {
 
         try
         {
-            System.out.println("Processing order event: " + message);
+            log.info("📥 [Product Service] Nhận được sự kiện từ Kafka: {}", message);
             JsonNode root = objectMapper.readTree(message);
             JsonNode items = root.get("items");
 
             if(items != null && items.isArray())
             {
                 List<Map<String, Object>> itemList = objectMapper.convertValue(items, new TypeReference<List<Map<String, Object>>>(){});
+                log.debug("📦 Đã bóc tách thành công {} sản phẩm từ message.", itemList.size());
             }
 
             if(items != null && items.isArray())
@@ -41,11 +42,15 @@ public class KafkaConsumeService {
                     JsonNode quantityNode = item.get("quantity");
 
                     if(productIdNode == null || quantityNode == null)
+                    {
+                        log.warn("⚠️ Bỏ qua item vì thiếu thông tin 'productId' hoặc 'quantity': {}", item);
                         continue;
+                    }
+
 
                     Long productId = productIdNode.asLong();
                     int quantity = quantityNode.asInt();
-
+                    log.info("🔄 Bắt đầu trừ kho cho Sản phẩm ID: {}, Số lượng trừ: {}", productId, quantity);
 
                     productRepository.findById(productId).ifPresentOrElse(product -> {
                         int currentStock = product.getStockQuantity() != null ? product.getStockQuantity() : 50;
@@ -53,11 +58,12 @@ public class KafkaConsumeService {
                         product.setStockQuantity(currentStock - quantity);
                         product.setSold(currentSold + quantity);
                         productRepository.save(product);
-                        System.out.println("Updated product " + productId + ": stock=" + product.getStockQuantity()
-                                + ", sold=" + product.getSold());
-                    }, () -> System.err.println("Product not found: " + productId));
+                        log.info("✅ Cập nhật kho thành công (Sản phẩm ID: {}): Tồn kho mới = {}, Đã bán = {}",
+                                productId, product.getStockQuantity(), product.getSold());
+                    }, () -> log.error("❌ Không thể cập nhật kho! Không tìm thấy Sản phẩm với ID: {}", productId);
+                });
 
-                    System.out.println("Kafka event received for product " + productId + " (skipping stock update as REST call handles it)");
+                log.warn("⚠️ Cảnh báo: Message không chứa danh sách 'items' hợp lệ.");
                 }
             }
 
