@@ -15,34 +15,35 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order)
-    {
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         return ResponseEntity.ok(orderService.createOrder(order));
     }
 
     @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUser(@PathVariable Long userId)
-    {
+    public List<Order> getOrdersByUser(@PathVariable Long userId) {
+        return orderService.getOrdersByUserId(userId);
+    }
+
+    @GetMapping("/users/{userIds}")
+    public List<Order> getOrdersByUser(@PathVariable List<Long> userId) {
         return orderService.getOrdersByUserId(userId);
     }
 
     @GetMapping("/seller/{sellerId}")
-    public List<Order> getOrdersBySeller(@PathVariable Long sellerId)
-    {
+    public List<Order> getOrdersBySeller(@PathVariable Long sellerId) {
         return orderService.getOrdersBySellerId(sellerId);
     }
 
     /** Admin: list all orders. */
     @GetMapping
-    public List<Order> getAllOrders()
-    {
+    public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
 
     /** Admin: update order status (e.g., PENDING, SHIPPED, DELIVERED). */
     @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status)
-    {        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 
     @DeleteMapping("/{id}")

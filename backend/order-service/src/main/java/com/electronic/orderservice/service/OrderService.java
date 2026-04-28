@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -29,27 +27,31 @@ public class OrderService {
     @Value("${PRODUCT_SERVICE_URL:http://localhost:8081}")
     private String productServiceUrl;
 
-    public Order createOrder(Order order)
-    {
+    public List<Order> getOrdersByUserId(List<Long> userIds) {
+        return orderRepository.findByUserIdIn(userIds);
+    }
+
+    public Order createOrder(Order order) {
         order.setOrderDate(LocalDateTime.now());
         order.setStatus("PENDING");
         Order savedOrder = orderRepository.save(order);
 
-        try
-        {
+        try {
             String orderJson = objectMapper.writeValueAsString(savedOrder);
             kafkaProducerService.sendOrderMessage(orderJson);
 
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("[OrderService] Failed to send order event to Kafka: " + e.getMessage());
         }
         return savedOrder;
     }
 
-
     public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
+    }
+
+    public Optional<Order> getOrderById(Long orderId) {
+        return orderRepository.findById(orderId);
     }
 
     public List<Order> getOrdersBySellerId(Long sellerId) {
@@ -62,9 +64,8 @@ public class OrderService {
     }
 
     /** Admin: update the status of an order. */
-    public Order updateOrderStatus(Long orderId, String status)
-    {
-        return orderRepository.findById(orderId).map(order ->{
+    public Order updateOrderStatus(Long orderId, String status) {
+        return orderRepository.findById(orderId).map(order -> {
             order.setStatus(status);
             return orderRepository.save(order);
         })
