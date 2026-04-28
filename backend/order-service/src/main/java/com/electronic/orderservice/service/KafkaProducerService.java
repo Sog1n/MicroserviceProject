@@ -17,4 +17,5 @@ public class KafkaProducerService {
         kafkaTemplate.send(TOPIC, message);
         log.debug("✅ [Order Service] Hoàn tất gửi message!");
     }
+
 }
