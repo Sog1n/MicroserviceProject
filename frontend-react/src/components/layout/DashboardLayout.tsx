@@ -26,6 +26,7 @@ export default function DashboardLayout() {
     { to: `/${role}/dashboard`, icon: <FiHome />, label: t('nav.dashboard') },
     { to: `/${role}/users`, icon: <FiUsers />, label: t('admin.userManagement') },
     { to: `/${role}/products`, icon: <FiBox />, label: 'All Products' },
+    { to: `/${role}/categories`, icon: <FiBox />, label: 'Category Management' },
     { to: `/${role}/products/moderation`, icon: <FiCheckSquare />, label: t('admin.productModeration') },
   ];
 

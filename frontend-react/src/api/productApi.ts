@@ -34,6 +34,12 @@ export interface ProductListParams {
   maxPrice?: number;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  displayName: string;
+}
+
 // Backend returns plain List<Product>, NOT paginated
 const productApi = {
   getAll: () =>
@@ -52,7 +58,16 @@ const productApi = {
     axiosClient.get<Product[]>(`/api/products/status/${status}`),
 
   getCategories: () =>
-    axiosClient.get<{ id: number; name: string }[]>('/api/products/categories'),
+    axiosClient.get<Category[]>('/api/products/categories'),
+
+  createCategory: (category: Partial<Category>) =>
+    axiosClient.post<Category>('/api/products/categories', category),
+
+  updateCategory: (id: number, category: Partial<Category>) =>
+    axiosClient.put<Category>(`/api/products/categories/${id}`, category),
+
+  deleteCategory: (id: number) =>
+    axiosClient.delete(`/api/products/categories/${id}`),
 
   create: (product: Partial<Product>) =>
     axiosClient.post<Product>('/api/products', product),

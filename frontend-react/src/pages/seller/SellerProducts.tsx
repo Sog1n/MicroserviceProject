@@ -12,7 +12,7 @@ import styles from './SellerPages.module.scss';
 import { FiPlus, FiEdit, FiTrash2, FiX, FiImage } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { formatCurrency } from '@/utils/helpers';
-import type { Product } from '@/api/productApi';
+import productApi, { type Product, type Category } from '@/api/productApi';
 
 const emptyForm = { name: '', description: '', price: 0, stockQuantity: 50, category: '', img: '', otherImages: [] as string[] };
 
@@ -21,6 +21,7 @@ export default function SellerProducts() {
   const dispatch = useAppDispatch();
   const { products, loading } = useAppSelector((s) => s.seller);
   const { user } = useAppSelector((s) => s.auth);
+  const [categories, setCategories] = useState<Category[]>([]);
   
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -35,7 +36,10 @@ export default function SellerProducts() {
   const [otherImageFiles, setOtherImageFiles] = useState<File[]>([]);
   const [otherImagePreviews, setOtherImagePreviews] = useState<string[]>([]);
 
-  useEffect(() => { dispatch(fetchSellerProducts()); }, [dispatch]);
+  useEffect(() => { 
+    dispatch(fetchSellerProducts()); 
+    productApi.getCategories().then(res => setCategories(res.data)).catch(console.error);
+  }, [dispatch]);
 
   const openCreate = () => { 
     setForm(emptyForm); 
@@ -225,7 +229,20 @@ export default function SellerProducts() {
                 <Input label={t('seller.productStock')} type="number" value={String(form.stockQuantity)} onChange={(e) => setForm({ ...form, stockQuantity: +e.target.value })} required />
               </div>
               
-              <Input label={t('seller.productCategory')} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: '#2d3436' }}>{t('seller.productCategory')}</label>
+                <select 
+                  value={form.category} 
+                  onChange={(e) => setForm({ ...form, category: e.target.value })} 
+                  required
+                  style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ced4da', fontSize: '1rem', outline: 'none', backgroundColor: 'white' }}
+                >
+                  <option value="" disabled>Select a category</option>
+                  {categories.map(c => (
+                    <option key={c.id} value={c.name}>{c.displayName}</option>
+                  ))}
+                </select>
+              </div>
               
               {/* Primary Image Upload */}
               <div style={{ marginBottom: '15px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px dashed #ced4da' }}>

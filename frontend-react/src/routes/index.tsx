@@ -28,6 +28,7 @@ const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'));
 const AdminUsers = lazy(() => import('@/pages/admin/AdminUsers'));
 const AdminProducts = lazy(() => import('@/pages/admin/AdminProducts'));
 const AdminProductModeration = lazy(() => import('@/pages/admin/AdminProductModeration'));
+const AdminCategories = lazy(() => import('@/pages/admin/AdminCategories'));
 const AdminProfile = lazy(() => import('@/pages/admin/AdminProfile'));
 
 // Seller
@@ -80,6 +81,7 @@ const router = createBrowserRouter([
           { path: 'dashboard', element: <AdminDashboard /> },
           { path: 'users', element: <AdminUsers /> },
           { path: 'products', element: <AdminProducts /> },
+          { path: 'categories', element: <AdminCategories /> },
           { path: 'products/moderation', element: <AdminProductModeration /> },
           { path: 'profile', element: <AdminProfile /> },
         ],

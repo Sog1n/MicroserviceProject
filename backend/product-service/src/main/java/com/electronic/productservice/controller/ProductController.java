@@ -89,6 +89,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateCategory(id, updatedCategory));
     }
 
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        productService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
     //Reviews CRUD
