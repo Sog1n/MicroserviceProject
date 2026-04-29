@@ -23,7 +23,7 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchAll',
   async (_params: { page?: number; size?: number; search?: string; sortBy?: string } | undefined, { rejectWithValue }) => {
     try {
-      const { data } = await productApi.getAll();
+      const { data } = await productApi.getByStatus('APPROVED');
       return data; // Product[]
     } catch (err) {
       return rejectWithValue(normalizeError(err).message);

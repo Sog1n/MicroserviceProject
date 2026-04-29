@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -8,7 +8,7 @@ import Button from '@/components/common/Button/Button';
 import Spinner from '@/components/common/Spinner/Spinner';
 import EmptyState from '@/components/common/EmptyState/EmptyState';
 import styles from './ProductDetail.module.scss';
-import { FiShoppingCart, FiStar, FiArrowLeft, FiCheck } from 'react-icons/fi';
+import { FiShoppingCart, FiStar, FiArrowLeft, FiCheck, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { formatCurrency } from '@/utils/helpers';
 
@@ -17,11 +17,20 @@ export default function ProductDetail() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { current: product, loading, error } = useAppSelector((s) => s.products);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) dispatch(fetchProductById(id));
     return () => { dispatch(clearCurrentProduct()); };
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (product?.img) {
+      setSelectedImage(product.img);
+    }
+  }, [product]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -43,6 +52,57 @@ export default function ProductDetail() {
 
   // Combine main image + other images into a gallery
   const allImages = [product.img, ...(product.otherImages || [])].filter(Boolean);
+  const displayImage = selectedImage || product.img;
+
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    setTouchEnd(null);
+    if ('targetTouches' in e) {
+      setTouchStart(e.targetTouches[0].clientX);
+    } else {
+      setTouchStart((e as React.MouseEvent).clientX);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if ('targetTouches' in e) {
+      setTouchEnd(e.targetTouches[0].clientX);
+    } else {
+      if (touchStart !== null) {
+        setTouchEnd((e as React.MouseEvent).clientX);
+      }
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (allImages.length <= 1) return;
+    const currentIndex = allImages.indexOf(displayImage);
+    const prevIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+    setSelectedImage(allImages[prevIndex]!);
+  };
+
+  const handleNextImage = () => {
+    if (allImages.length <= 1) return;
+    const currentIndex = allImages.indexOf(displayImage);
+    const nextIndex = (currentIndex + 1) % allImages.length;
+    setSelectedImage(allImages[nextIndex]!);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNextImage();
+    } else if (isRightSwipe) {
+      handlePrevImage();
+    }
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   return (
     <div className={styles.page}>
@@ -52,9 +112,30 @@ export default function ProductDetail() {
 
       <div className={styles.layout}>
         <div className={styles.gallery}>
-          <div className={styles.mainImage}>
-            {product.img ? (
-              <img src={product.img} alt={product.name} />
+          <div 
+            className={styles.mainImage}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleTouchStart}
+            onMouseMove={handleTouchMove}
+            onMouseUp={handleTouchEnd}
+            onMouseLeave={handleTouchEnd}
+          >
+            {displayImage ? (
+              <>
+                <img src={displayImage} alt={product.name} draggable="false" />
+                {allImages.length > 1 && (
+                  <>
+                    <button className={`${styles.navButton} ${styles.prevButton}`} onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}>
+                      <FiChevronLeft />
+                    </button>
+                    <button className={`${styles.navButton} ${styles.nextButton}`} onClick={(e) => { e.stopPropagation(); handleNextImage(); }}>
+                      <FiChevronRight />
+                    </button>
+                  </>
+                )}
+              </>
             ) : (
               <span className={styles.noImage}>📦</span>
             )}
@@ -62,7 +143,11 @@ export default function ProductDetail() {
           {allImages.length > 1 && (
             <div className={styles.thumbnails}>
               {allImages.map((img, i) => (
-                <div key={i} className={styles.thumb}>
+                <div 
+                  key={i} 
+                  className={`${styles.thumb} ${img === displayImage ? styles.active : ''}`}
+                  onClick={() => setSelectedImage(img!)}
+                >
                   <img src={img!} alt={`${product.name} ${i + 1}`} />
                 </div>
               ))}

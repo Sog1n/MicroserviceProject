@@ -16,7 +16,7 @@ export default function AdminUsers() {
   const { users, loading } = useAppSelector((s) => s.admin);
   const [search, setSearch] = useState('');
 
-  useEffect(() => { dispatch(fetchAdminUsers()); }, [dispatch]);
+  useEffect(() => { dispatch(fetchAdminUsers(undefined)); }, [dispatch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,11 +47,11 @@ export default function AdminUsers() {
 
       <Card className={styles.tableCard}>
         <div className={styles.table}>
-          <div className={styles.tableHeader}>
+          <div className={`${styles.tableHeader} ${styles.colsUser}`}>
             <span>ID</span><span>{t('auth.username')}</span><span>{t('auth.email')}</span><span>{t('auth.fullName')}</span><span>{t('admin.role')}</span><span>{t('common.actions')}</span>
           </div>
           {users.map((u) => (
-            <div key={u.id} className={styles.tableRow}>
+            <div key={u.id} className={`${styles.tableRow} ${styles.colsUser}`}>
               <span>{u.id}</span>
               <span className={styles.bold}>{u.username}</span>
               <span>{u.email}</span>

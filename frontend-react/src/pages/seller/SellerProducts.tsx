@@ -22,12 +22,12 @@ export default function SellerProducts() {
   const { products, loading } = useAppSelector((s) => s.seller);
   const { user } = useAppSelector((s) => s.auth);
   const [categories, setCategories] = useState<Category[]>([]);
-  
+
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
-  
+
   // Custom Thumbnail
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -36,28 +36,28 @@ export default function SellerProducts() {
   const [otherImageFiles, setOtherImageFiles] = useState<File[]>([]);
   const [otherImagePreviews, setOtherImagePreviews] = useState<string[]>([]);
 
-  useEffect(() => { 
-    dispatch(fetchSellerProducts()); 
+  useEffect(() => {
+    dispatch(fetchSellerProducts());
     productApi.getCategories().then(res => setCategories(res.data)).catch(console.error);
   }, [dispatch]);
 
-  const openCreate = () => { 
-    setForm(emptyForm); 
-    setEditId(null); 
+  const openCreate = () => {
+    setForm(emptyForm);
+    setEditId(null);
     setImageFile(null);
     setImagePreview('');
     setOtherImageFiles([]);
     setOtherImagePreviews([]);
-    setShowModal(true); 
+    setShowModal(true);
   };
-  
+
   const openEdit = (p: Product) => {
-    setForm({ 
-      name: p.name, 
-      description: p.description, 
-      price: p.price, 
-      stockQuantity: p.stockQuantity, 
-      category: p.category, 
+    setForm({
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      stockQuantity: p.stockQuantity,
+      category: p.category,
       img: p.img || '',
       otherImages: p.otherImages || []
     });
@@ -104,7 +104,7 @@ export default function SellerProducts() {
   const uploadImageToCloudinary = async (file: File): Promise<string> => {
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-    
+
     if (!cloudName || !uploadPreset) {
       throw new Error("Missing Cloudinary config (VITE_CLOUDINARY_CLOUD_NAME or VITE_CLOUDINARY_UPLOAD_PRESET in .env)");
     }
@@ -117,14 +117,22 @@ export default function SellerProducts() {
       method: 'POST',
       body: formData,
     });
-    
+
     if (!res.ok) {
       const errData = await res.json().catch(() => null);
       throw new Error(errData?.error?.message || "Failed to upload image to Cloudinary");
     }
-    
+
     const data = await res.json();
-    return data.secure_url;
+    let url = data.secure_url;
+
+    // 2. Tối ưu hóa URL trả về để hiển thị sắc nét
+    // Chúng ta chèn tham số 'q_auto:best,f_auto' vào sau '/upload/'
+    if (url.includes('/upload/')) {
+      url = url.replace('/upload/', '/upload/f_auto,q_auto:best/');
+    }
+
+    return url;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -147,10 +155,10 @@ export default function SellerProducts() {
         toast.success("Other images uploaded", { id: "upload-other" });
       }
 
-      const productData = { 
-        ...form, 
-        img: finalImgUrl, 
-        otherImages: finalOtherImageUrls 
+      const productData = {
+        ...form,
+        img: finalImgUrl,
+        otherImages: finalOtherImageUrls
       };
 
       if (editId) {
@@ -162,10 +170,10 @@ export default function SellerProducts() {
       }
       setShowModal(false);
       dispatch(fetchSellerProducts());
-    } catch (err: any) { 
+    } catch (err: any) {
       toast.error(err.message || t('common.error'), { id: "upload-error" });
-    } finally { 
-      setSaving(false); 
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -223,17 +231,17 @@ export default function SellerProducts() {
             <form onSubmit={handleSubmit} className={styles.modalForm}>
               <Input label={t('seller.productName')} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               <Input label={t('seller.productDescription')} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
-              
+
               <div className={styles.formRow}>
                 <Input label={t('seller.productPrice')} type="number" value={String(form.price)} onChange={(e) => setForm({ ...form, price: +e.target.value })} required />
                 <Input label={t('seller.productStock')} type="number" value={String(form.stockQuantity)} onChange={(e) => setForm({ ...form, stockQuantity: +e.target.value })} required />
               </div>
-              
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
                 <label style={{ fontSize: '0.9rem', fontWeight: 600, color: '#2d3436' }}>{t('seller.productCategory')}</label>
-                <select 
-                  value={form.category} 
-                  onChange={(e) => setForm({ ...form, category: e.target.value })} 
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
                   required
                   style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ced4da', fontSize: '1rem', outline: 'none', backgroundColor: 'white' }}
                 >
@@ -243,23 +251,23 @@ export default function SellerProducts() {
                   ))}
                 </select>
               </div>
-              
+
               {/* Primary Image Upload */}
               <div style={{ marginBottom: '15px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px dashed #ced4da' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '0.95rem', color: '#2d3436' }}>
                   Primary Thumbnail
                 </label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleImageChange} 
-                  style={{ display: 'block', marginBottom: '10px' }} 
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'block', marginBottom: '10px' }}
                 />
                 {(imagePreview || form.img) && (
-                  <img 
-                    src={imagePreview || form.img} 
-                    alt="Preview" 
-                    style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #dfe6e9' }} 
+                  <img
+                    src={imagePreview || form.img}
+                    alt="Preview"
+                    style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #dfe6e9' }}
                   />
                 )}
               </div>
@@ -269,24 +277,24 @@ export default function SellerProducts() {
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '0.95rem', color: '#2d3436' }}>
                   Other Images (Gallery)
                 </label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
+                <input
+                  type="file"
+                  accept="image/*"
                   multiple
-                  onChange={handleOtherImagesChange} 
-                  style={{ display: 'block', marginBottom: '10px' }} 
+                  onChange={handleOtherImagesChange}
+                  style={{ display: 'block', marginBottom: '10px' }}
                 />
-                
+
                 {/* Display Existing + New Gallery Images */}
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
-                  
+
                   {/* Existing Images */}
                   {(form.otherImages || []).map((imgUrl, idx) => (
                     <div key={`exist-${idx}`} style={{ position: 'relative' }}>
                       <img src={imgUrl} alt="Gallery" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #dfe6e9' }} />
-                      <button 
-                        type="button" 
-                        onClick={() => removeExistingOtherImage(idx)} 
+                      <button
+                        type="button"
+                        onClick={() => removeExistingOtherImage(idx)}
                         style={{ position: 'absolute', top: -5, right: -5, background: '#d63031', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
                         <FiX size={12} />
                       </button>
@@ -298,9 +306,9 @@ export default function SellerProducts() {
                     <div key={`new-${idx}`} style={{ position: 'relative' }}>
                       <img src={preview} alt="New Gallery" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #0984e3' }} />
                       <span style={{ position: 'absolute', bottom: 0, left: 0, background: '#0984e3', color: 'white', fontSize: '10px', padding: '2px 4px', borderRadius: '0 4px 0 8px' }}>New</span>
-                      <button 
-                        type="button" 
-                        onClick={() => removeNewOtherImage(idx)} 
+                      <button
+                        type="button"
+                        onClick={() => removeNewOtherImage(idx)}
                         style={{ position: 'absolute', top: -5, right: -5, background: '#d63031', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
                         <FiX size={12} />
                       </button>

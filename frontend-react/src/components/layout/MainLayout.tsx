@@ -52,7 +52,7 @@ export default function MainLayout() {
                   <FiUser /> {user.fullName}
                 </Link>
                 <Link to="/user/orders" className={styles.navLink}>
-                  <FiShoppingCart /> {t('nav.myOrders') || 'My Orders'}
+                  <FiShoppingCart /> {t('nav.orders') || 'My Orders'}
                 </Link>
                 {user.role !== 'USER' && (
                   <Link to={`/${user.role.toLowerCase()}/dashboard`} className={styles.navLink}>

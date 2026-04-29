@@ -55,10 +55,9 @@
   padding: $space-3 $space-4;
 }
 
-// 6-col for user management
-.tableHeader:has(+ .tableRow span:nth-child(6)),
-.tableRow:has(span:nth-child(6)) {
-  grid-template-columns: repeat(6, 1fr);
+// Column layouts for different tables
+.tableHeader.colsUser, .tableRow.colsUser {
+  grid-template-columns: 60px 1.5fr 2.5fr 2fr 100px 120px;
 }
 
 .tableHeader {
